@@ -23,8 +23,8 @@ taskController.getTask = async (req, res) => {
 
 taskController.putTask = async (req, res) => {
     try {
-        const  id = req.params.id;
-        const { task, isComplete } = req.body;
+        const { id, task, isComplete } = req.body;  // req.body에서 ID 포함하여 받기
+
 
         const updateTask = await Task.updateOne(
             { _id: id },
@@ -43,7 +43,7 @@ taskController.putTask = async (req, res) => {
 
 taskController.delTask = async (req, res) => {
     try {
-        const  id = req.params.id;
+        const  id  = req.params.id;
 
         const delTask = await Task.deleteOne({ _id: id });
 
