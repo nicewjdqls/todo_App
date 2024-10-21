@@ -23,23 +23,24 @@ taskController.getTask = async (req, res) => {
 
 taskController.putTask = async (req, res) => {
     try {
-        const { id, task, isComplete } = req.body;  // req.body에서 ID 포함하여 받기
-
-
-        const updateTask = await Task.updateOne(
-            { _id: id },
-            { task, isComplete }
-        );
-
-        if (updateTask.nModified === 0) {
-            return res.status(404).json({ status: 'fail', message: 'Task not found or no changes made' });
-        }
-
-        res.status(200).json({ status: 'ok', message: 'Task updated successfully' });
+      const id = req.params.id; // URL에서 ID 가져오기
+      const { isComplete } = req.body; // 완료 상태만 업데이트
+  
+      const updateTask = await Task.updateOne(
+        { _id: id },
+        { isComplete } // 완료 상태만 업데이트
+      );
+  
+      if (updateTask.nModified === 0) {
+        return res.status(404).json({ status: 'fail', message: 'Task not found or no changes made' });
+      }
+  
+      res.status(200).json({ status: 'ok', message: 'Task updated successfully' });
     } catch (err) {
-        res.status(400).json({ status: 'fail', error: err });
+      res.status(400).json({ status: 'fail', error: err });
     }
-};
+  };
+  
 
 taskController.delTask = async (req, res) => {
     try {
