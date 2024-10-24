@@ -6,29 +6,17 @@ const saltRounds = 10;
 userController.createUser = async (req, res) => {
     try {
         const { email, name, password } = req.body;
-
-        // 1. 비밀번호 공백 검사
-        if (!password || password.trim().length === 0) {
-            throw new Error('비밀번호는 공백일 수 없습니다.');
-        }
-
-        // 2. 이미 존재하는 유저 확인
         const user = await User.findOne({ email });
         if (user) {
-            throw new Error('이미 가입된 이메일입니다.');
+            throw new Error('이미 가입이 된 유저입니다.');
         }
-
-        // 3. 비밀번호 해시화
-        const hash = await bcrypt.hash(password, saltRounds);
-
-        // 4. 새로운 유저 생성
+        const hash = await bcrypt.hash(password, saltRounds); // bcrypt 대신 bcryptjs의 해시 함수 사용
         const newUser = new User({ email, name, password: hash });
         await newUser.save();
-
         res.status(200).json({ status: "success" });
         console.log("hash", hash);
     } catch (error) {
-        res.status(400).json({ status: "fail", message: error.message });
+        res.status(400).json({ status: "fail" });
     }
 };
 
@@ -58,6 +46,7 @@ userController.getUser=async(req,res)=>{
         if(!user){
             throw new Error("can not find user");
         }
+        console.log("User found:", user); // 사용자 정보 로그
         res.status(200).json({status : "success", user});
     }catch(error){
         res.status(400).json({status : "fail3434", message:error.message});
